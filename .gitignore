@@ -1,0 +1,27 @@
+
+# Virtual environment
+.venv/
+
+# Python cache
+__pycache__/
+*.py[cod]
+
+# Environment variables and secrets
+.env
+
+# Generated data
+data/audio/*
+data/transcripts/*
+data/processed/*
+
+# Keep data folder structure
+!data/audio/.gitkeep
+!data/transcripts/.gitkeep
+!data/processed/.gitkeep
+
+# IDE
+.vscode/
+
+# Testing
+.pytest_cache/
+.coverage
