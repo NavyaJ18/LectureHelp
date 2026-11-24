@@ -61,6 +61,7 @@ Example:
     ]
 }
 ```
+A manual smoke test is also available through `python test_transcription.py`.
 
 **Field descriptions:**
 
