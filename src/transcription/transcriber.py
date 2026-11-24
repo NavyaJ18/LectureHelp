@@ -6,8 +6,9 @@ from faster_whisper import WhisperModel
 from src.audio.audio_validator import validate_audio_file
 from src.transcription.transcription_models import (
     TranscriptionSegment,
-    TranscriptionResult
+    TranscriptionResult,
 )
+from src.transcription.transcript_storage import save_transcription
 
 
 MODEL_SIZE = "base"
@@ -21,18 +22,23 @@ class AudioTranscriber:
         self,
         model_size: str = MODEL_SIZE,
         device: str = DEVICE,
-        compute_type: str = COMPUTE_TYPE
+        compute_type: str = COMPUTE_TYPE,
+        save_transcripts: bool = True,
+        transcript_dir: str = "data/transcripts",
     ):
         self.model = WhisperModel(
             model_size,
             device=device,
-            compute_type=compute_type
+            compute_type=compute_type,
         )
+
+        self.save_transcripts = save_transcripts
+        self.transcript_dir = transcript_dir
 
     def transcribe(
         self,
         audio_path: str,
-        language: str | None = None
+        language: str | None = None,
     ) -> TranscriptionResult:
 
         file_path = validate_audio_file(audio_path)
@@ -42,7 +48,7 @@ class AudioTranscriber:
                 str(file_path),
                 language=language,
                 beam_size=5,
-                vad_filter=True
+                vad_filter=True,
             )
 
             transcription_segments = []
@@ -53,8 +59,7 @@ class AudioTranscriber:
                 if not text:
                     continue
 
-                # Convert average log probability into a bounded
-                # confidence-like score (not a calibrated probability).
+                # This is a confidence-like score, not a calibrated probability.
                 confidence = math.exp(segment.avg_logprob)
                 confidence = min(1.0, max(0.0, confidence))
 
@@ -63,19 +68,27 @@ class AudioTranscriber:
                         start=round(segment.start, 2),
                         end=round(segment.end, 2),
                         text=text,
-                        confidence=round(confidence, 4)
+                        confidence=round(confidence, 4),
                     )
                 )
 
-            return TranscriptionResult(
+            result = TranscriptionResult(
                 audio_file=file_path.name,
                 language=info.language,
                 language_probability=round(
                     info.language_probability, 4
                 ),
                 duration_seconds=round(info.duration, 2),
-                segments=transcription_segments
+                segments=transcription_segments,
             )
+
+            if self.save_transcripts:
+                save_transcription(
+                    result,
+                    output_dir=self.transcript_dir,
+                )
+
+            return result
 
         except Exception as error:
             raise RuntimeError(
