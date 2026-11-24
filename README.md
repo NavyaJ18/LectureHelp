@@ -130,3 +130,33 @@ for segment in result.segments:
         f"{segment.text}"
     )
 ```
+
+## Development Progress
+
+### Completed
+
+- [x] Audio file validation and format checking.
+- [x] Audio metadata extraction.
+- [x] Audio preprocessing and normalization.
+- [x] Conversion to 16 kHz mono WAV format.
+- [x] Audio ingestion pipeline.
+- [x] Faster-Whisper integration.
+- [x] Automatic language detection.
+- [x] Timestamped speech transcription.
+- [x] Structured transcription data models.
+- [x] JSON transcript storage and loading.
+- [x] Transcript validation.
+- [x] Unit tests for audio and transcription modules.
+
+### Upcoming
+
+- [ ] Video ingestion and frame extraction.
+- [ ] Slide change detection.
+- [ ] OCR-based slide text extraction.
+- [ ] Text and visual embeddings.
+- [ ] Vector database integration.
+- [ ] Retrieval-Augmented Generation (RAG).
+- [ ] Lecture summaries and structured notes.
+- [ ] Automatic quiz generation.
+- [ ] Streamlit user interface.
+- [ ] End-to-end integration and evaluation.
