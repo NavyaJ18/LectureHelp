@@ -1,5 +1,6 @@
 
 import unittest
+from pathlib import Path
 from types import SimpleNamespace
 from unittest.mock import MagicMock, patch
 
@@ -30,9 +31,7 @@ class TestAudioTranscriber(unittest.TestCase):
         self.mock_model = MagicMock()
         self.mock_whisper_model.return_value = self.mock_model
 
-        self.mock_validate.return_value = (
-            __import__("pathlib").Path("lecture.wav")
-        )
+        self.mock_validate.return_value = Path("lecture.wav")
 
         self.transcriber = AudioTranscriber()
 
@@ -49,7 +48,6 @@ class TestAudioTranscriber(unittest.TestCase):
         )
 
     def test_successful_transcription(self):
-
         mock_segment = SimpleNamespace(
             start=0.0,
             end=4.5,
@@ -79,21 +77,22 @@ class TestAudioTranscriber(unittest.TestCase):
         )
 
         self.mock_save.assert_called_once_with(
-    result,
-    output_dir="data/transcripts",
-)
+            result,
+            output_dir="data/transcripts",
+        )
 
     def test_empty_transcription(self):
-
         self.configure_empty_transcription()
 
         result = self.transcriber.transcribe("lecture.wav")
 
         self.assertEqual(len(result.segments), 0)
-        self.mock_save.assert_called_once()
+        self.mock_save.assert_called_once_with(
+            result,
+            output_dir="data/transcripts",
+        )
 
     def test_transcription_failure(self):
-
         self.mock_model.transcribe.side_effect = Exception(
             "Model execution error"
         )
@@ -104,13 +103,15 @@ class TestAudioTranscriber(unittest.TestCase):
         self.mock_save.assert_not_called()
 
     def test_saving_can_be_disabled(self):
-
         self.configure_empty_transcription()
 
         transcriber = AudioTranscriber(save_transcripts=False)
         result = transcriber.transcribe("lecture.wav")
 
         self.assertEqual(len(result.segments), 0)
+        self.assertEqual(result.language, "en")
+        self.assertEqual(result.duration_seconds, 60.0)
+
         self.mock_save.assert_not_called()
 
 
