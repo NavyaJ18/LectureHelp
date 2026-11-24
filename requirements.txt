@@ -3,3 +3,4 @@ librosa
 soundfile
 numpy
 faster-whisper
+av<19
