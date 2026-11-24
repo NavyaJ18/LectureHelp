@@ -78,7 +78,10 @@ class TestAudioTranscriber(unittest.TestCase):
             "Today we study neural networks.",
         )
 
-        self.mock_save.assert_called_once()
+        self.mock_save.assert_called_once_with(
+    result,
+    output_dir="data/transcripts",
+)
 
     def test_empty_transcription(self):
 
