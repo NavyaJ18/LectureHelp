@@ -87,9 +87,26 @@ class TestAudioTranscriber(unittest.TestCase):
         result = self.transcriber.transcribe("lecture.wav")
 
         self.assertEqual(len(result.segments), 0)
+
         self.mock_save.assert_called_once_with(
             result,
             output_dir="data/transcripts",
+        )
+
+    def test_custom_transcript_directory(self):
+        self.configure_empty_transcription()
+
+        custom_dir = "custom_transcripts"
+
+        transcriber = AudioTranscriber(
+            transcript_dir=custom_dir
+        )
+
+        result = transcriber.transcribe("lecture.wav")
+
+        self.mock_save.assert_called_once_with(
+            result,
+            output_dir=custom_dir,
         )
 
     def test_transcription_failure(self):
