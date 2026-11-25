@@ -16,6 +16,16 @@ from src.transcription.transcription_models import (
 
 class TestTranscriptStorage(unittest.TestCase):
 
+    def test_invalid_utf8_file(self):
+        invalid_path = self.output_dir / "invalid_encoding.json"
+        invalid_path.write_bytes(b"\xff\xfe\xfa")
+
+        with self.assertRaisesRegex(
+            ValueError,
+            "valid UTF-8",
+        ):
+            load_transcription(str(invalid_path))
+            
     def setUp(self):
         self.temp_dir = tempfile.TemporaryDirectory()
         self.output_dir = Path(self.temp_dir.name)
