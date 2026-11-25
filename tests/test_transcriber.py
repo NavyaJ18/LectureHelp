@@ -9,6 +9,18 @@ from src.transcription.transcriber import AudioTranscriber
 
 class TestAudioTranscriber(unittest.TestCase):
 
+    def test_invalid_audio_file(self):
+        self.mock_validate.side_effect = FileNotFoundError(
+            "Audio file not found."
+        )
+
+        with self.assertRaises(RuntimeError):
+            self.transcriber.transcribe("missing.wav")
+
+        self.mock_model.transcribe.assert_not_called()
+        self.mock_save.assert_not_called()
+    
+
     def setUp(self):
         self.model_patcher = patch(
             "src.transcription.transcriber.WhisperModel"
