@@ -7,3 +7,20 @@ __all__ = [
     "validate_video_file",
     "SUPPORTED_VIDEO_FORMATS",
 ]
+
+from src.video.video_validator import (
+    validate_video_file,
+    SUPPORTED_VIDEO_FORMATS,
+)
+
+from src.video.video_metadata import (
+    VideoMetadata,
+    extract_video_metadata,
+)
+
+__all__ = [
+    "validate_video_file",
+    "SUPPORTED_VIDEO_FORMATS",
+    "VideoMetadata",
+    "extract_video_metadata",
+]
