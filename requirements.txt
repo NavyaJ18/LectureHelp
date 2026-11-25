@@ -4,3 +4,4 @@ soundfile
 numpy
 faster-whisper
 av<19
+opencv-python
