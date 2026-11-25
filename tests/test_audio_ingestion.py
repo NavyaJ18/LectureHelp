@@ -7,8 +7,33 @@ from unittest.mock import patch
 from src.audio.audio_ingestion import process_audio
 from src.audio.audio_metadata import AudioMetadata
 
+from unittest.mock import MagicMock, patch
+
 
 class TestAudioIngestion(unittest.TestCase):
+
+    @patch("src.audio.audio_ingestion.preprocess_audio")
+    @patch("src.audio.audio_ingestion.extract_audio_metadata")
+    @patch("src.audio.audio_ingestion.validate_audio_file")
+    def test_preprocessing_failure(
+        self,
+        mock_validate,
+        mock_metadata,
+        mock_preprocess,
+    ):
+        mock_validate.return_value = Path("sample.wav")
+        mock_metadata.return_value = MagicMock()
+        mock_preprocess.side_effect = RuntimeError(
+            "Preprocessing failed."
+        )
+
+        with self.assertRaisesRegex(
+            RuntimeError,
+            "Preprocessing failed",
+        ):
+            process_audio("sample.wav")
+
+        mock_preprocess.assert_called_once()
 
     def setUp(self):
         self.temp_dir = TemporaryDirectory()
