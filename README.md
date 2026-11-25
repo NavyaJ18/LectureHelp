@@ -148,6 +148,10 @@ for segment in result.segments:
 - [x] JSON transcript storage and loading.
 - [x] Transcript validation.
 - [x] Unit tests for audio and transcription modules.
+- [x] Video file validation
+- [x] Video metadata extraction
+- [x] Configurable video frame extraction
+- [x] Unit tests for video validation and metadata extraction
 
 ### Upcoming
 
