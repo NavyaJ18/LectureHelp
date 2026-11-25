@@ -9,6 +9,38 @@ from src.transcription.transcription_models import (
 
 class TestTranscriptionModels(unittest.TestCase):
 
+    def test_multiple_segments_serialization(self):
+        result = TranscriptionResult(
+            audio_file="long_lecture.wav",
+            language="en",
+            language_probability=0.97,
+            duration_seconds=120.0,
+            segments=[
+                TranscriptionSegment(
+                    start=0.0,
+                    end=5.0,
+                    text="First segment.",
+                    confidence=0.91,
+                ),
+                TranscriptionSegment(
+                    start=5.0,
+                    end=12.5,
+                    text="Second segment.",
+                    confidence=0.88,
+                ),
+            ],
+        )
+
+        data = result.to_dict()
+
+        self.assertEqual(len(data["segments"]), 2)
+        self.assertEqual(data["segments"][0]["start"], 0.0)
+        self.assertEqual(data["segments"][1]["end"], 12.5)
+        self.assertEqual(
+            data["segments"][1]["text"],
+            "Second segment.",
+        )
+        
     def setUp(self):
         self.segment = TranscriptionSegment(
             start=0.0,
