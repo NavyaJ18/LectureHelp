@@ -24,3 +24,5 @@ __all__ = [
     "VideoMetadata",
     "extract_video_metadata",
 ]
+
+from src.video.frame_extractor import extract_video_frames
